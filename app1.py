@@ -2,11 +2,12 @@ import os
 import shutil
 import streamlit as st
 from gradio_client import Client
+import time
 
-def run():  # Define the run function
+def run():
     # Define the directory where you want to save the image
     save_dir = "images"
- 
+    
     # Create the directory if it doesn't exist
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
@@ -22,6 +23,15 @@ def run():  # Define the run function
 
     if generate_image:
         if prompt:
+            # Initialize the progress bar
+            progress_bar = st.progress(0)
+            st.info("Generating your image, please wait...")
+
+            # Update progress (simulated here, as API calls may not provide progress feedback)
+            for percent_complete in range(0, 100, 20):  # Simulate the progress for the example
+                time.sleep(0.5)  # Simulate time taken for image generation
+                progress_bar.progress(percent_complete)
+
             # Generate the image using the prompt provided by the user
             result = client.predict(
                 prompt=prompt,
@@ -32,6 +42,10 @@ def run():  # Define the run function
                 num_inference_steps=4,
                 api_name="/infer"
             )
+            
+            # Complete progress bar
+            progress_bar.progress(100)
+
             # Extract the file path from the result tuple
             image_path = result[0]  # This is the path to the generated image
 
